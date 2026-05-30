@@ -1,3 +1,4 @@
+const validator = require("validator");
 const ContributionsDAO = require("../data/contributions-dao").ContributionsDAO;
 const {
     environmentalScripts
@@ -29,9 +30,9 @@ function ContributionsHandler(db) {
 
         /*jslint evil: true */
         // Insecure use of eval() to parse inputs
-        const preTax = eval(req.body.preTax);
-        const afterTax = eval(req.body.afterTax);
-        const roth = eval(req.body.roth);
+        const preTax = parseInt(validator.escape(String(req.body.preTax)));
+        const afterTax = parseInt(validator.escape(String(req.body.afterTax)));
+        const roth = parseInt(validator.escape(String(req.body.roth)));
 
         /*
         //Fix for A1 -1 SSJS Injection attacks - uses alternate method to eval

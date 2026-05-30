@@ -1,3 +1,4 @@
+const validator = require("validator");
 const ProfileDAO = require("../data/profile-dao").ProfileDAO;
 const ESAPI = require("node-esapi");
 const {
@@ -30,8 +31,15 @@ function ProfileHandler(db) {
             // the context of a URL in a link header
             // doc.website = ESAPI.encoder().encodeForURL(doc.website)
 
-            return res.render("profile", {
+            const safeDoc = {
                 ...doc,
+                firstName: validator.escape(String(doc.firstName || "")),
+                lastName: validator.escape(String(doc.lastName || "")),
+                address: validator.escape(String(doc.address || "")),
+            };
+                return res.render("profile", {
+                ...safeDoc,
+                firstNameSafeString: safeDoc.firstName,
                 environmentalScripts
             });
         });
@@ -40,14 +48,17 @@ function ProfileHandler(db) {
     this.handleProfileUpdate = (req, res, next) => {
 
         const {
-            firstName,
-            lastName,
+            firstName: rawFirstName,
+            lastName: rawLastName,
             ssn,
             dob,
-            address,
+            address: rawAddress,
             bankAcc,
             bankRouting
         } = req.body;
+        const firstName = validator.escape(rawFirstName || "");
+        const lastName = validator.escape(rawLastName || "");
+        const address = validator.escape(rawAddress || "");
 
         // Fix for Section: ReDoS attack
         // The following regexPattern that is used to validate the bankRouting number is insecure and vulnerable to
@@ -61,7 +72,8 @@ function ProfileHandler(db) {
         const testComplyWithRequirements = regexPattern.test(bankRouting);
         // if the regex test fails we do not allow saving
         if (testComplyWithRequirements !== true) {
-            const firstNameSafeString = firstName;
+            const firstNameSafeString = validator.escape(firstName);
+            const lastNameSafe = validator.escape(lastName);
             return res.render("profile", {
                 updateError: "Bank Routing number does not comply with requirements for format specified",
                 firstNameSafeString,
@@ -93,7 +105,8 @@ function ProfileHandler(db) {
                 if (err) return next(err);
 
                 // WARN: Applying any sting specific methods here w/o checking type of inputs could lead to DoS by HPP
-                //firstName = firstName.trim();
+                if (!validator.isAlpha(firstName.replace(/\s/g, ""))) return next(new Error("Invalid first name"));
+            firstName = validator.escape(firstName.trim());
                 user.updateSuccess = true;
                 user.userId = userId;
 

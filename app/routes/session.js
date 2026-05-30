@@ -1,3 +1,6 @@
+const validator = require("validator");
+const bcrypt = require("bcrypt");
+const jwt = require("jsonwebtoken");
 const UserDAO = require("../data/user-dao").UserDAO;
 const AllocationsDAO = require("../data/allocations-dao").AllocationsDAO;
 const {
@@ -114,6 +117,9 @@ function SessionHandler(db) {
             // i.e:
             // `req.session.regenerate(() => {})`
             req.session.userId = user._id;
+            const token = jwt.sign({ id: user._id }, "nodegoat-secret-key-2024", { expiresIn: "1h" });
+            res.locals.token = token;
+            console.log("JWT Token generated for user:", user._id);
             return res.redirect(user.isAdmin ? "/benefits" : "/dashboard");
         });
     };
@@ -228,11 +234,17 @@ function SessionHandler(db) {
                         if (err) return next(err);
                         res.cookie("session", sessionId);
                         req.session.userId = user._id;
+            const token = jwt.sign({ id: user._id }, "nodegoat-secret-key-2024", { expiresIn: "1h" });
+            res.locals.token = token;
+            console.log("JWT Token generated for user:", user._id);
                         return res.render("dashboard", { ...user, environmentalScripts });
                     });
                     */
                     req.session.regenerate(() => {
                         req.session.userId = user._id;
+            const token = jwt.sign({ id: user._id }, "nodegoat-secret-key-2024", { expiresIn: "1h" });
+            res.locals.token = token;
+            console.log("JWT Token generated for user:", user._id);
                         // Set userId property. Required for left nav menu links
                         user.userId = user._id;
 

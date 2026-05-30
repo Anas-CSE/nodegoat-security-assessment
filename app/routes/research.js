@@ -1,3 +1,4 @@
+const validator = require("validator");
 const ResearchDAO = require("../data/research-dao").ResearchDAO;
 const needle = require("needle");
 const {
@@ -12,7 +13,7 @@ function ResearchHandler(db) {
     this.displayResearch = (req, res) => {
 
         if (req.query.symbol) {
-            const url = req.query.url + req.query.symbol;
+            const url = validator.escape(req.query.url || "") + validator.escape(req.query.symbol || "");
             return needle.get(url, (error, newResponse, body) => {
                 if (!error && newResponse.statusCode === 200) {
                     res.writeHead(200, {
