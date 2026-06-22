@@ -14,6 +14,7 @@ const session = require("express-session");
 const consolidate = require("consolidate"); // Templating library adapter for Express
 const swig = require("swig");
 const helmet = require("helmet");
+const csrf = require("csurf");
 const MongoClient = require("mongodb").MongoClient; // Driver for connecting to MongoDB
 const http = require("http");
 const marked = require("marked");
