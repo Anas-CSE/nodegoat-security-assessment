@@ -1,11 +1,8 @@
-const winston = require("winston");
-const logger = winston.createLogger({
-  transports: [
-    new winston.transports.Console(),
-    new winston.transports.File({ filename: "security.log" })
-  ]
-});
-logger.info("Application started");
+// const rateLimit = require("express-rate-limit");
+// const cors = require("cors");
+// const winston = require("winston");
+// logger disabled
+// logger.info disabled
 
 "use strict";
 
@@ -127,7 +124,31 @@ MongoClient.connect(db, (err, db) => {
     app.set("views", `${__dirname}/app/views`);
     // Fix for A5 - Security MisConfig
     // TODO: make sure assets are declared before app.use(session())
-    app.use(helmet());
+    app.use(helmet({
+        contentSecurityPolicy: {
+            directives: {
+                defaultSrc: ["'self'"],
+                scriptSrc: ["'self'"],
+                styleSrc: ["'self'", "'unsafe-inline'"],
+                imgSrc: ["'self'", "data:"],
+            }
+        },
+        hsts: {
+            maxAge: 31536000,
+            includeSubDomains: true,
+            preload: true
+        },
+        frameguard: { action: "deny" },
+        noSniff: true,
+        xssFilter: true
+    }));
+
+    // Rate Limiting
+    // rateLimit disabled temporarily
+    // app.use(limiter);
+
+    // CORS Configuration
+    // cors disabled temporarily
     app.use(express.static(`${__dirname}/app/assets`));
 
 
