@@ -29,6 +29,22 @@ Open browser: http://localhost:4000
 - Nmap penetration testing — only port 4000 open
 - Winston logging — Console + File transport
 - Security checklist created
+  
+## Week 4 - SQL Injection Assessment
+
+- SQLMap automated vulnerability scanning performed
+- SQL Injection testing on NodeGoat endpoints
+- Database enumeration verified through SQLMap
+- Vulnerability findings documented
+- Security recommendations prepared
+
+## Week 5 - CSRF Protection
+
+- CSRF vulnerability testing with Burp Suite
+- CSRF PoC generation and validation
+- CSRF protection implemented using csurf middleware
+- CSRF token verification enabled
+- Security testing completed after remediation
 
 ## Author
 Anas-CSE — github.com/Anas-CSE
