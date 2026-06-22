@@ -1,12 +1,14 @@
 # NodeGoat Security Assessment
 
-A 3-week cybersecurity internship project focused on security assessment and hardening of the OWASP NodeGoat application.
+A 6-week cybersecurity internship project focused on security assessment and hardening of the OWASP NodeGoat application.
 
 ## Project Overview
 - **Week 1** — Vulnerability Assessment
 - **Week 2** — Security Implementation
 - **Week 3** — Penetration Testing & Logging
-
+- **Week 4** — SQL injection Assessment
+- **Week 5** — CSRF protection
+  
 ## Setup Instructions
 ```bash
 sudo docker-compose up -d
